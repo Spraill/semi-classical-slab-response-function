@@ -1,4 +1,4 @@
-"""Compare pickled results with results from the matlab code.
+DESC = """Compare pickled results with results from the matlab code.
 
 Note: The following two environment variables must be set:
 - MATLAB_EXECUTABLE: The path to the matlab executable on your machine.
@@ -235,7 +235,7 @@ def main():
 
 def get_parser():
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawTextHelpFormatter
+        description=DESC, formatter_class=argparse.RawTextHelpFormatter
     )
     parser.add_argument(
         "pickle_files",

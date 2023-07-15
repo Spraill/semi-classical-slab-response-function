@@ -11,3 +11,6 @@ figs
 # Profiling results
 *.lprof
 *.prof
+doc/_stat
+doc/_apidocs
+doc/_clidocs

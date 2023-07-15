@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-"""This script computes H, G, A1 and A2 electron dynamics matrices
+DESC = """This script computes H, G, A1 and A2 electron dynamics matrices
 
 Usage:
     -p [parameters] -v [variables]
@@ -196,8 +196,10 @@ def process_chunks(params, functions, chunk_size, cache):
 
 
 # @profile
-def main(args):
-    """Main function."""
+def main():
+    args = get_parser().parse_args()
+    set_arg_defaults(args)
+
     start_time = datetime.datetime.now()
 
     gpus_to_use = []
@@ -548,7 +550,7 @@ def get_parser():
         ),
     )
     parser = argparse.ArgumentParser(
-        description=f"{__doc__}\n{param_text}",
+        description=f"{DESC}\n{param_text}",
         formatter_class=argparse.RawTextHelpFormatter,
     )
     inputs_group = parser.add_argument_group("Inputs")
@@ -745,6 +747,4 @@ def tile_2d_arr(width, height, max_width, max_height):
 
 
 if __name__ == "__main__":
-    arguments = get_parser().parse_args()
-    set_arg_defaults(arguments)
-    main(arguments)
+    main()

@@ -283,14 +283,17 @@ def update_arrays(p, cache):
 # @profile
 def compute_functions(functions, p, cache, result_only=False):
     """Compute a function. MORE DETAIL COULD HELP - MAYBE A BETTER NAME?
+    
     - Calculates each function as a function of Vf, theta and phi
-    - Perfoms the integral by multiplying by sin(theta)
+    - Performs the integral by multiplying by sin(theta)
+    
     Args:
         functions (list[str]): Functions to compute. Can include ("H", "A1", "A2", "G").
         p (dict[str:object]): parameters used for calculations.
         C (dict[str:xp.ndarray]): Arrays used for calculations.
     Returns:
-        dict[str:dict[str:xp.ndarray]]: Arrays of the functions in the format:
+        dict[str:dict[str:xp.ndarray]]: Arrays of the functions in the format::
+            
             {
                 FUNCTION_NAME: {
                     "array": xp.ndarray[theta*phi],
