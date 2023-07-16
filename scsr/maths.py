@@ -75,6 +75,40 @@ def cartesian_product(*arrays, reshaped=True):
         return arr
 
 
+def tile_2d_arr(width, height, max_width, max_height):
+    p, q = max_width, max_height
+    if p > width:
+        p = width
+    if q > height:
+        q = height
+    if p == 0:
+        v_slices = width
+    else:
+        v_slices = math.ceil(width / p)
+    if q == 0:
+        h_slices = height
+    else:
+        h_slices = math.ceil(height / q)
+    h_start = h_end = v_start = v_end = 0
+    for h in range(h_slices - bool(height % p)):
+        h_start = h * q
+        h_end = h_start + p
+        for v in range(v_slices - bool(width % p)):
+            v_start = v * q
+            v_end = v_start + q
+            yield h_start, h_end, v_start, v_end
+        if v_end < width:
+            yield h_start, h_end, v_end, width
+    if h_end < height:
+        for v in range(v_slices - bool(width % p)):
+            v_start = v * q
+            v_end = v_start + q
+            yield h_end, width, v_start, v_end
+        if v_start < width:
+            yield h_end, width, v_end, width
+
+
+
 def values_differ(d1, d2, keys):
     """Check if any of the values for the given keys differ between d1 & d2.
 

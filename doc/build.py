@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 CLI_DOC_TEMPLATE_RST = """\
 ``{script_name}``
-====================
+===================================
 
 .. argparse::
    :module: {module_path}

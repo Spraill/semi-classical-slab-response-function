@@ -8,8 +8,13 @@ from textwrap import dedent
 
 import scsr.cli.calc as tc
 
+DESC = """\
+This script accepts a scsr-calc command and generates a command
+to run each chunk. Slurm jobscripts can also be created for each chunk
+using `-J`.
+"""
 USAGE = """\
-'a'\ build_thesis_code_chunks.py [-h] [-J] [thesis_code.py args]
+build_thesis_code_chunks.py [-h] [-J] [args for thesis_code.py]
 """
 jobscript = """\
 #!/bin/bash --login
@@ -89,7 +94,7 @@ def validate_args(tc_args):
 
 
 def get_parser():
-    parser = argparse.ArgumentParser(usage=USAGE)
+    parser = argparse.ArgumentParser(description=DESC, usage=USAGE)
     parser.add_argument("-J", "--create-job-script", action="store_true")
     return parser
 
