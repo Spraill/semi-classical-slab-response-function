@@ -106,7 +106,7 @@ def get_parser():
     import argparse
 
     parser = argparse.ArgumentParser(
-        description="Check whether two pickles from thesis_code.py match."
+        description="Check whether two pickles from scsr-calc match."
     )
     parser.add_argument("pickle_path", type=str, help="path to pickle file")
     parser.add_argument(

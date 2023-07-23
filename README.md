@@ -45,62 +45,70 @@ $ test/test_thesis_code_against_matlab.sh
 ## Running
 
 ```
-$ python thesis_code.py --help
-usage: thesis_code.py [-h] [-p P=V [P=V ...]] [-v P=V1,V2,..,VN [P=V1,V2,..,VN ...]] [-d {64,128,256}] [-x] [-g] [-G GPU_IDS [GPU_IDS ...] | -A] [-m SUBPROCESS_COUNT] [-w] [-o OUTPUT] [-f] [-u seconds]
-                      [-C CHUNKS] [-P CHUNK_PARAMETER] [-I CHUNK_ID]
-                      [{A1,G,A2,H} ...]
+$ scsr-calc --help
+usage: scsr-calc [-h] [-p P=V [P=V ...]] [-v P=V1,V2,..,VN [P=V1,V2,..,VN ...]] [-d {64,128,256}] [-x] [-g] [-G GPU_IDS [GPU_IDS ...] | -A] [-m SUBPROCESS_COUNT]
+                 [-w] [-E] [-o OUTPUT] [-f] [-u seconds] [-C CHUNKS] [-P CHUNK_PARAMETER] [-I CHUNK_ID]
+                 [{H,A1,G,A2} ...]
 
 This script computes H, G, A1 and A2 electron dynamics matrices
 
-Usage:
-    -p [parameters] -v [variables]
+Examples:
 
-    Run A2 & G with 200 steps:
-      python thesis_code.py A2 G -p steps=200
+Run A2 & G with 200 steps:
 
-    Run A2 & G with multiprocessing, with 200 steps and lc = 4 and Kx = (0,1,2,3):
-      python thesis_code.py A2 G -p lc=4 steps=200 -x -v Kx=0:3
+    scsr-calc A2 G -p steps=200
 
-    Run A2 & G with multiprocessing, with 200 steps for 6 equally-spaced w.
-    w values from 0-3:
-      python thesis_code.py A2 G -p steps=200 -x -v w=0:3:6
+Run A2 & G with multiprocessing, with 200 steps and lc = 4 and Kx = (0,1,2,3):
 
-    Run A2 & G with 100 steps, then write to file:
-      python thesis_code.py A2 G -p steps=100 -w
+    scsr-calc A2 G -p lc=4 steps=200 -x -v Kx=0:3
 
-    Run A2 & G with 100 steps, then write to file called "A2_G_100_steps.pkl"
-      python thesis_code.py A2 G -p steps=100 -w -o A2_G_100_steps.pkl
+Run A2 & G with multiprocessing, with 200 steps for 6 equally-spaced w.
+w values from 0-3:
+
+    scsr-calc A2 G -p steps=200 -x -v w=0:3:6
+
+Run A2 & G with 100 steps, then write to file:
+
+    scsr-calc A2 G -p steps=100 -w
+
+Run A2 & G with 100 steps, then write to file called "A2_G_100_steps.pkl"
+
+    scsr-calc A2 G -p steps=100 -w -o A2_G_100_steps.pkl
 
 Output:
-    Files are written as python pickles. Pickles can be read from a new python
-    session using:
+Files are written as python pickles. Pickles can be read from a new python
+session using:
 
-        import pickle
-        result = pickle.load(open('output.pkl', 'rb'))
+    import pickle
+    result = pickle.load(open('output.pkl', 'rb'))
 
-    Or, more conveniently, using the `scsr.results.load_results` function,
-    which returns a results object corresponding to the type of pickle. It
-    expects a list of 1 (or more, if chunking is used) pickle path(s):
+Or, more conveniently, using the `scsr.results.load_results` function,
+which returns a results object corresponding to the type of pickle. It
+expects a list of 1 (or more, if chunking is used) pickle path(s), as it
+also deals with compiling results from chunked `scsr-calc` commands:
 
-        from scsr.results import load_results
-        results = load_results(['out.1.pkl', 'out.2.pkl'])
+    from scsr.results import load_results
+    results = load_results(['out.1.pkl', 'out.2.pkl'])
 
-Parameters:
-        Ky, Ln, L, Kx, Vf, w, lc, Nf_m, tau, wp, P
-        steps: The number of discrete steps in theta/phi axes. (The theta by phi
-                grid is steps^2).
-        theta_max: The maximum value of theta.
-        phi_max: The maximum value of phi.
-        max_tile_size: The max size of the tile of a m by n function matrix to compute
-                at once.
-        mp_batch_size: The number of function arrays to process before sending them to
-                the main thread (No need to adjust).
+# Parameters:
+
+`Kx`, `lc`, `L`, `P`, `Nf_m`, `Ln`, `Vf`, `w`, `Ky`, `wp`, `tau`
+
+* `steps`: The number of discrete steps in theta/phi axes. (The theta by phi
+grid is steps^2).
+* `theta_max`: The maximum value of theta.
+* `phi_max`: The maximum value of phi.
+* `max_tile_size`: The max size of the tile of a m by n function matrix to compute
+at once. Default is (2,2), but you may get significant performance
+boosts if you increase this - especially in GPU mode.
+* `mp_batch_size`: The number of function arrays to process before sending them to
+the main thread (No need to adjust).
 
 options:
   -h, --help            show this help message and exit
 
 Inputs:
-  {A1,G,A2,H}           Functions.
+  {H,A1,G,A2}           Functions.
   -p P=V [P=V ...], --params P=V [P=V ...]
                         Parameters to override. space-separated list of '[PARAM]=[VALUE]' pairs.
   -v P=V1,V2,..,VN [P=V1,V2,..,VN ...], --variable-params P=V1,V2,..,VN [P=V1,V2,..,VN ...]
@@ -129,6 +137,7 @@ Processing:
 
 Output:
   -w, --write           Write a pickle file with the resultant array.
+  -E, --epsilon-only    Only include epsilon values in the results.
   -o OUTPUT, --output OUTPUT
                         Output pickle file path. Defaults to 'results/output.pkl'.
   -f, --force           Overwrite pickle file path it exists. Will generate a unique name
@@ -151,7 +160,7 @@ Chunking:
 Testing was performed with the below command, suffixed with the additional arguments in the below table: 
 
 ```bash
-$ python thesis_code.py G H -v w=0:1.2:3 Kx=0.001:0.4:10 -p steps=150 L=50 tau=10 P=0 -w
+$ scsr-calc G H -v w=0:1.2:3 Kx=0.001:0.4:10 -p steps=150 L=50 tau=10 P=0 -w
 ```
 Testing with:
 - **System A**: i5-10600K / 32GB RAM / RTX 3080 (10GB VRAM)

@@ -5,24 +5,24 @@ Examples:
 
 Run A2 & G with 200 steps:
     
-    python thesis_code.py A2 G -p steps=200
+    scsr-calc A2 G -p steps=200
 
 Run A2 & G with multiprocessing, with 200 steps and lc = 4 and Kx = (0,1,2,3):
     
-    python thesis_code.py A2 G -p lc=4 steps=200 -x -v Kx=0:3
+    scsr-calc A2 G -p lc=4 steps=200 -x -v Kx=0:3
 
 Run A2 & G with multiprocessing, with 200 steps for 6 equally-spaced w.
 w values from 0-3:
     
-    python thesis_code.py A2 G -p steps=200 -x -v w=0:3:6
+    scsr-calc A2 G -p steps=200 -x -v w=0:3:6
 
 Run A2 & G with 100 steps, then write to file:
     
-    python thesis_code.py A2 G -p steps=100 -w
+    scsr-calc A2 G -p steps=100 -w
 
 Run A2 & G with 100 steps, then write to file called "A2_G_100_steps.pkl"
     
-    python thesis_code.py A2 G -p steps=100 -w -o A2_G_100_steps.pkl
+    scsr-calc A2 G -p steps=100 -w -o A2_G_100_steps.pkl
 
 Output:
 Files are written as python pickles. Pickles can be read from a new python 
@@ -33,7 +33,8 @@ session using:
 
 Or, more conveniently, using the `scsr.results.load_results` function,
 which returns a results object corresponding to the type of pickle. It 
-expects a list of 1 (or more, if chunking is used) pickle path(s):
+expects a list of 1 (or more, if chunking is used) pickle path(s), as it
+also deals with compiling results from chunked `scsr-calc` commands:
 
     from scsr.results import load_results
     results = load_results(['out.1.pkl', 'out.2.pkl'])

@@ -14,7 +14,7 @@ to run each chunk. Slurm jobscripts can also be created for each chunk
 using `-J`.
 """
 USAGE = """\
-build_thesis_code_chunks.py [-h] [-J] [args for thesis_code.py]
+scsr-build-chunked-jobscripts [-h] [-J] [args for scsr-calc]
 """
 jobscript = """\
 #!/bin/bash --login
