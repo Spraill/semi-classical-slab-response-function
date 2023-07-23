@@ -9,7 +9,8 @@ CLI_DOC_TEMPLATE_RST = """\
 .. argparse::
    :module: {module_path}
    :func: get_parser
-   :prog: {script_name}"""
+   :prog: {script_name}
+   :markdownhelp:"""
 
 def main():
     docs_dir = Path(__file__).parent

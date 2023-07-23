@@ -1,10 +1,14 @@
 DESC = """Compare pickled results with results from the matlab code.
 
 Note: The following two environment variables must be set:
-- MATLAB_EXECUTABLE: The path to the matlab executable on your machine.
-  Examples: '/usr/local/bin/matlab' or 'C:/Program Files/MATLAB/R2022a/bin/matlab.exe'
-- MATLAB_SCRIPTS_PATH: The path to directory containing the original logic for
-  this code. This directory must include get_matelement.m and dependent functions.
+
+- `$MATLAB_EXECUTABLE`: 
+    The path to the matlab executable on your machine. For example 
+    ``/usr/local/bin/matlab`` or ``C:/Program Files/MATLAB/R2022a/bin/matlab.exe``.
+- `$MATLAB_SCRIPTS_PATH`:
+    The path to directory containing original logic for this code. This 
+    directory must include `get_matelement.m` and dependent 
+    files.
 
 """
 # Standard

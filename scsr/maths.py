@@ -55,6 +55,13 @@ ArrayOp = Callable[[ndarray, ndarray], ndarray]
 def set_gpu_mode(enabled: bool):
     """Set whether to use GPU or not.
 
+    This sets the `xp` global within the maths module to the `cupy`
+    module, rather than numpy as it is by default.
+
+    This should probably be set before calling :meth:`update_arrays()`, to 
+    ensure that all the cached arrays are CuPy arrays and loaded into GPU 
+    memory.
+
     Args:
         enabled (bool): True to use GPU, False to use CPU.
     """
@@ -76,7 +83,7 @@ def cartesian_product(*arrays: ndarray, make_2d: bool=True):
     arr = np.empty([len(a) for a in arrays] + [la], dtype=dtype)
     for i, a in enumerate(np.ix_(*arrays)):
         arr[..., i] = a
-    if reshaped:
+    if make_2d:
         return arr.reshape(-1, la)
     else:
         return arr
@@ -558,9 +565,6 @@ def calc_velocity(
         theta_array: ndarray, phi_array: ndarray, vf: float
 ) -> ndarray:
     """Get velocity in x, y and z.
-
-    Args:
-        theta_array: hello.
 
     Returns:
         xp.ndarray[theta*phi*3]: x, y and z velocity.
