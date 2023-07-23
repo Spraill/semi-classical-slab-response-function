@@ -549,12 +549,10 @@ def get_parser():
     for param in all_params:
         if param not in param_descs:
             no_desc.add(param)
-    no_desc_text = ', '.join(f'`{p}`' for p in no_desc)
+    no_desc_text = ", ".join(f"`{p}`" for p in no_desc)
     param_text = "# Parameters:\n\n{}\n\n{}".format(
         no_desc_text,
-        "\n".join(
-            f"* `{param}`: {param_descs[param]}" for param in param_descs
-        ),
+        "\n".join(f"* `{param}`: {param_descs[param]}" for param in param_descs),
     )
     parser = argparse.ArgumentParser(
         description=f"{DESC}\n{param_text}",

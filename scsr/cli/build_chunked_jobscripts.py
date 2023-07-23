@@ -168,7 +168,7 @@ def main():
                     gpu_commands=gpu_commands,
                     chunks_sbatch=chunks_config,
                     max_days=1 if tc_args.gpu else 3,
-                    log_dir=log_dir
+                    log_dir=log_dir,
                 )
             )
         print(

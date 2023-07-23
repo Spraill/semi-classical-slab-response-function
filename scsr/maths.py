@@ -58,8 +58,8 @@ def set_gpu_mode(enabled: bool):
     This sets the `xp` global within the maths module to the `cupy`
     module, rather than numpy as it is by default.
 
-    This should probably be set before calling :meth:`update_arrays()`, to 
-    ensure that all the cached arrays are CuPy arrays and loaded into GPU 
+    This should probably be set before calling :meth:`update_arrays()`, to
+    ensure that all the cached arrays are CuPy arrays and loaded into GPU
     memory.
 
     Args:
@@ -77,7 +77,7 @@ def set_gpu_mode(enabled: bool):
         globals()["xp"] = np
 
 
-def cartesian_product(*arrays: ndarray, make_2d: bool=True):
+def cartesian_product(*arrays: ndarray, make_2d: bool = True):
     la = len(arrays)
     dtype = np.result_type(*arrays)
     arr = np.empty([len(a) for a in arrays] + [la], dtype=dtype)
@@ -87,6 +87,7 @@ def cartesian_product(*arrays: ndarray, make_2d: bool=True):
         return arr.reshape(-1, la)
     else:
         return arr
+
 
 def chunk_indices(length: int, chunk_size: int):
     if chunk_size > length:
@@ -113,21 +114,21 @@ def tile_2d_arr(
         height: Height of array
         max_width: Max width of tile
         max_height: Max height of tile
-    
+
     Example:
-        >>> for tile in tile_2d_arr(5,5,3,2): print(tile) 
+        >>> for tile in tile_2d_arr(5,5,3,2): print(tile)
         (0, 3, 0, 2)
         (3, 5, 0, 2)
         (0, 3, 2, 4)
         (3, 5, 2, 4)
         (0, 3, 4, 5)
         (3, 5, 4, 5)
-        >>> for tile in tile_2d_arr(7,3,4,2): print(tile) 
+        >>> for tile in tile_2d_arr(7,3,4,2): print(tile)
         (0, 4, 0, 2)
         (4, 7, 0, 2)
         (0, 4, 2, 3)
         (4, 7, 2, 3)
-        
+
     Yields:
         tuple with the 4 values for each tile:
         - horizontal start index
@@ -157,16 +158,18 @@ def values_differ(d1: dict, d2: dict, keys: Iterable[Hashable]):
             return True
 
 
-def op_across_axes(arr_a: ndarray, arr_b: ndarray, axes: list[int], op: ArrayOp) -> ndarray:
+def op_across_axes(
+    arr_a: ndarray, arr_b: ndarray, axes: list[int], op: ArrayOp
+) -> ndarray:
     """Perform operation on two arrays along the given axes.
-    
+
     Example:
         >>> arr_a, arr_b = np.arange(9).reshape(3,3), np.array([[[-1,1,0]]])
-        >>> op_across_axes(arr_a, arr_b, [0,2,1], operator.mul) 
+        >>> op_across_axes(arr_a, arr_b, [0,2,1], operator.mul)
         array([[[ 0,  3,  0],
                 [-1,  4,  0],
                 [-2,  5,  0]]])
-        >>> op_across_axes(arr_a, arr_b, [0,1,2], operator.mul) 
+        >>> op_across_axes(arr_a, arr_b, [0,1,2], operator.mul)
         array([[[ 0,  1,  0],
                 [-3,  4,  0],
                 [-6,  7,  0]]])
@@ -180,7 +183,7 @@ def stack_broadcast(arr_a: ndarray, arr_b: ndarray) -> ndarray:
     n+m dims, with arr_b broadcast across on every new leading axis.
 
     Example:
-        >>> stack_broadcast(np.empty((2,2)), np.array([5,10])) 
+        >>> stack_broadcast(np.empty((2,2)), np.array([5,10]))
         array([[[ 5, 10],
                 [ 5, 10]],
                [[ 5, 10],
@@ -196,7 +199,7 @@ def stack_op(arr_a: ndarray, arr_b: ndarray, op: ArrayOp) -> ndarray:
     value.
 
     Example:
-        >>> stack_op(np.array([[1,2],[3,4]]), np.array([-1,10]), operator.mul) 
+        >>> stack_op(np.array([[1,2],[3,4]]), np.array([-1,10]), operator.mul)
         array([[[-1, 10],
                 [-2, 20]],
                [[-3, 30],
@@ -224,22 +227,22 @@ def mul_axes(arr_a: ndarray, arr_b: ndarray, axes: list[int]) -> ndarray:
 
 
 def mn_mul(arr_a: ndarray, arr_b: ndarray) -> ndarray:
-    """Given an (1 or m, 1 or n)-shaped array and an (m, n, theta, phi)-shaped 
-    array, return an array where each (theta, phi) slice is multipled by the 
+    """Given an (1 or m, 1 or n)-shaped array and an (m, n, theta, phi)-shaped
+    array, return an array where each (theta, phi) slice is multipled by the
     value at (m,n).
-    
+
     Example:
-        >>> mn_mul(np.array([[1,2],[3,4]]), np.ones((2,2,1,1))) 
+        >>> mn_mul(np.array([[1,2],[3,4]]), np.ones((2,2,1,1)))
         array([[[[1.]],
                 [[2.]]],
                [[[3.]],
                 [[4.]]]])
-        >>> mn_mul(np.array([[1,2]]), np.ones((2,2,1,1)))       
+        >>> mn_mul(np.array([[1,2]]), np.ones((2,2,1,1)))
         array([[[[1.]],
                 [[2.]]],
                [[[1.]],
                 [[2.]]]])
-        >>> mn_mul(np.array([[1],[2]]), np.ones((2,2,1,1)))   
+        >>> mn_mul(np.array([[1],[2]]), np.ones((2,2,1,1)))
         array([[[[1.]],
                 [[1.]]],
                [[[2.]],
@@ -255,14 +258,14 @@ def update_arrays(p: dict[str, ArrayLike], cache: dict[str, ArrayLike]) -> None:
 
     This is a key method used to optimise calculations, with the primary
     goal of limiting any cases where we might otherwise recalculate the same
-    array twice. All of the quantities cached here are used to calculate the 
+    array twice. All of the quantities cached here are used to calculate the
     functions in compute_functions.
 
     TODO: Add more detail here
-    
+
     Args:
         p: The parameters to use to calculate the quantities. Only values
-            that depend on parameters which differ between `p` and 
+            that depend on parameters which differ between `p` and
             `cache['last_p']` will be calculated.
         cache : Dictionary to update with the quantities.
     """
@@ -414,19 +417,19 @@ def update_arrays(p: dict[str, ArrayLike], cache: dict[str, ArrayLike]) -> None:
 # @profile
 def compute_functions(functions, p, cache, result_only=False):
     """Compute a function. MORE DETAIL COULD HELP - MAYBE A BETTER NAME?
-    
+
     - Calculates each function as a function of Vf, theta and phi
     - Performs the integral by multiplying by sin(theta)
 
     TODO: defo add more detail here
-    
+
     Args:
         functions (list[str]): Functions to compute. Can include ("H", "A1", "A2", "G").
         p (dict[str:object]): parameters used for calculations.
         C (dict[str:xp.ndarray]): Arrays used for calculations.
     Returns:
         dict[str:dict[str:xp.ndarray]]: Arrays of the functions in the format::
-            
+
             {
                 FUNCTION_NAME: {
                     "array": xp.ndarray[theta*phi],
@@ -561,9 +564,7 @@ def compute_functions(functions, p, cache, result_only=False):
     return all_arrays
 
 
-def calc_velocity(
-        theta_array: ndarray, phi_array: ndarray, vf: float
-) -> ndarray:
+def calc_velocity(theta_array: ndarray, phi_array: ndarray, vf: float) -> ndarray:
     """Get velocity in x, y and z.
 
     Returns:

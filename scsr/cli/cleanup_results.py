@@ -52,6 +52,7 @@ def queue_deletion_by_pattern(pattern, files=True, dirs=True, interactive=True):
         if result is not None and (not interactive or deletion_confirmed(result)):
             yield result
 
+
 def get_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
