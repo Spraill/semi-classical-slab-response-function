@@ -2,7 +2,7 @@ Writing Documentation
 =====================
 
 This documentation is generated using `sphinx <https://www.sphinx-doc.org/en/master/>`_.
-The docs are automatically built and published to github pages on a merge into the 
+The docs are automatically built and published to GitHub Pages on a merge into the 
 `main <https://www.sphinx-doc.org/en/master/>`_ branch, using GitHub actions.
 
 These pages are written using ReStructured Text (RST). Here's a 
