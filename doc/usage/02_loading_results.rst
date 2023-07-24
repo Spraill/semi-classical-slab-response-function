@@ -1,5 +1,5 @@
-Loading results from pickles
-============================
+Loading Results
+===============
 
 To load results, you can use the :mod:`scsr.results` module:
     
