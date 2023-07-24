@@ -33,7 +33,7 @@ Here's a quick primer for
 `writing markdown <https://learnxinyminutes.com/docs/markdown/>`_.
 
 All exectutable files will be documented if they have a submodule within 
-``scsr/cli`` (and must have a ``get_parser()`` method which returns an 
+``scsr/cli`` (and each must have a ``get_parser()`` method which returns an 
 ``argparse.ArgumentParser``)
 
 Building the Documentation (Locally)
